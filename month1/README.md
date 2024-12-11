@@ -1,0 +1,1 @@
+# Month 1: Strengthen Core and Advanced MERN Stack Skills
