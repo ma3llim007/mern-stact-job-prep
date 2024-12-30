@@ -11,6 +11,7 @@ import {
 const router = Router();
 
 // Router
+router.route("/").get(loginPage);
 router.route("/signup").get(signUpPage);
 router.route("/signin").post(signInUser);
 router.route("/login").get(loginPage);
