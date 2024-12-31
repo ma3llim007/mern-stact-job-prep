@@ -2,7 +2,7 @@ import express from "express";
 import path from "path";
 import router from "./routes/web.routes.js";
 import passwordBasedRouter from "./routes/passwordbased.routes.js";
-import bodyParser from "body-parser";
+import twoFactorAuthenticationRouter from "./routes/twoFactor.routes.js";
 import session from "express-session";
 
 const __dirname = import.meta.dirname;
@@ -37,5 +37,6 @@ app.use(
 // Settting Router
 app.use("/", router);
 app.use("/password-based", passwordBasedRouter);
+app.use("/2fa", twoFactorAuthenticationRouter);
 
 export default app;

@@ -1,0 +1,83 @@
+<div class="flex justify-center items-center gap-5">
+    <div class="w-2/5 bg-white p-6 rounded-lg shadow-md mb-6">
+        <!-- User Info Card Header -->
+        <div class="text-center text-xl font-semibold text-gray-800 mb-4">
+            User Information
+        </div>
+
+        <!-- User Info Card Body -->
+        <div class="space-y-4">
+            <div class="flex justify-between items-center">
+                <span class="font-medium text-gray-600">Email:</span>
+                <span class="text-gray-800">
+                    <%= email %>
+                </span>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <span class="font-medium text-gray-600">Datetime:</span>
+                <span class="text-gray-800">
+                    <%= datetime %>
+                </span>
+            </div>
+        </div>
+
+        <!-- User Info Card Button Section -->
+        <div class="w-full mt-6 flex justify-between">
+            <% if (is2faEnabled) { %>
+                <form action="disable-2fa" method="POST">
+                    <button type="submit"
+                        class="w-full py-2 px-4 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                        Disable 2FA
+                    </button>
+                </form>
+                <% } else { %>
+                    <form action="enable-2fa" method="POST">
+                        <button type="submit"
+                            class="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                            Enable 2FA
+                        </button>
+                    </form>
+                    <% } %>
+
+                        <!-- Log Out Form -->
+                        <form action="logout" method="POST">
+                            <button type="submit"
+                                class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                                Log Out
+                            </button>
+                        </form>
+        </div>
+    </div>
+
+    <!-- Backup Codes Card -->
+    <div class="w-2/5 bg-white p-6 rounded-lg shadow-md">
+        <!-- Backup Codes Card Header -->
+        <div class="text-center text-xl font-semibold text-gray-800 mb-4">
+            Backup Codes
+        </div>
+
+        <!-- Backup Codes Card Body -->
+        <div class="space-y-4">
+            <% if (backupCodes && backupCodes.length> 0) { %>
+                <div>
+                    <div class="space-y-2 flex flex-wrap gap-3 items-center justify-center">
+                        <% backupCodes.forEach(code=> { %>
+                            <p
+                                class="bg-gray-100 p-2 rounded-lg text-center text-gray-800 font-semibold border border-green-900">
+                                <%= code %>
+                            </p>
+                            <% }) %>
+                    </div>
+                    <form class="mt-5" action="download-secure-code" method="POST">
+                        <button type="submit"
+                            class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                            Download Code
+                        </button>
+                    </form>
+                    <% } else { %>
+                        <p class="text-center text-gray-600">No backup codes available. Please enable 2FA first.</p>
+                        <% } %>
+                </div>
+        </div>
+    </div>
