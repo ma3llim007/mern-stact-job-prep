@@ -1,9 +1,11 @@
 import express from "express";
 import apiRouter from "./routes/apiRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import pubSubRoutes from "./routes/pubSubRoutes.js";
 import session from "express-session";
 import { RedisStore } from "connect-redis";
 import redisClient from "./cache/redisClient.js";
+import subscribeToChannel from "./pubsub/subscriber.js";
 
 const app = express();
 
@@ -28,5 +30,8 @@ app.use(
 // API routes
 app.use("/api", apiRouter);
 app.use("/user", userRoutes);
+app.use("/pubsub", pubSubRoutes);
 
+// Start subscriber
+subscribeToChannel("notifications");
 export default app;
