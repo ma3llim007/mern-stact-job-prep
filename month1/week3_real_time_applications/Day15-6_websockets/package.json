@@ -4,6 +4,9 @@
   "main": "index.js",
   "author": "mohd sameer <mohdsameer68257@gmail.com>",
   "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
   "license": "MIT",
   "dependencies": {
     "express": "^4.21.2",

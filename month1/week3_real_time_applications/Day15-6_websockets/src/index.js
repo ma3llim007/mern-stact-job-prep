@@ -1,31 +1,28 @@
 import express from "express";
+import path from "path";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
 const app = express();
 const server = createServer(app);
+app.use(express.static("public"));
 
 // Socket IO
-const io = new Server(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"],
-    },
-});
+const io = new Server(server);
 
-// Middleware for Socket.IO
-io.use((socket, next) => {
-    const token = socket.handshake.auth.token;
-    console.log(token);
-    if (token) {
-        return next();
-    }
-    return next(new Error("Authentication error"));
-});
-
-// Event handling
+// Handle connection
 io.on("connection", (socket) => {
     console.log("A user connected:", socket.id);
+
+    // Emit a welcome message to the client
+    socket.emit("serverMessage", { message: "welcome to the websocket server!" });
+
+    // Listen for 'clientMessage' event from the client
+    socket.on("clientMessage", (data) => {
+        console.log(`Received message from client:`, data);
+
+        socket.emit("serverResponse", { message: "Message Received Successfully" });
+    });
 
     // Listen for custom events
     socket.on("message", (data) => {
@@ -39,6 +36,10 @@ io.on("connection", (socket) => {
 });
 
 const PORT = 3000;
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+});
+
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
