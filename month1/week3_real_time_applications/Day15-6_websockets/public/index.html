@@ -4,42 +4,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Socket.IO</title>
+    <title>Real-Time Chat & Notifications</title>
+    <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #chat {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+
+        #notifications {
+            margin-top: 10px;
+            color: #007bff;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Socket.IO Test</h1>
-    <div>
-        <p><strong>Server Message:</strong> <span id="serverMessage">Waiting for message...</span></p>
-        <p><strong>Server Response:</strong> <span id="serverResponse">No response yet...</span></p>
-    </div>
-    <button id="sendMessage">Send Message to Server</button>
-    <script src="/socket.io/socket.io.js"></script>
+    <h1>Real-Time Chat</h1>
+    <div id="chat"></div>
+    <input type="text" id="username" placeholder="Enter your username" />
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button id="send">Send</button>
+    <div id="notifications"></div>
+
     <script>
-        const socket = io("http://localhost:3000");
+        const socket = io('http://localhost:4000');
+        const chatBox = document.getElementById('chat');
+        const notificationsBox = document.getElementById('notifications');
 
-        // Handle server messages
-        socket.on('serverMessage', (data) => {
-            document.getElementById('serverMessage').textContent = data.message;
-        })
-
-        // Handle server responses
-        socket.on('serverResponse', (data) => {
-            document.getElementById('serverResponse').textContent = data.message;
+        // Join the chat with a username
+        const usernameInput = document.getElementById('username');
+        usernameInput.addEventListener('change', () => {
+            const username = usernameInput.value;
+            if (username) {
+                socket.emit('joinChat', username);
+            }
         });
 
-        // Send a message to the server when the button is clicked
-        document.getElementById('sendMessage').addEventListener('click', () => {
-            socket.emit('clientMessage', { content: 'Hello, server!' });
+        // Handle incoming chat messages
+        socket.on('chatMessage', (data) => {
+            const messageElement = document.createElement('p');
+            messageElement.textContent = `${data.sender}: ${data.message}`;
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
         });
 
-        // Log connection status
-        socket.on('connect', () => {
-            console.log('Connected to server:', socket.id);
+        // Handle notifications
+        socket.on('notification', (data) => {
+            console.log(data);
+            
+            notificationsBox.textContent = data.message;
+            setTimeout(() => notificationsBox.textContent = '', 5000); // Clear notification after 5 seconds
         });
 
-        socket.on('disconnect', () => {
-            console.log('Disconnected from server');
+        // Send chat messages
+        document.getElementById('send').addEventListener('click', () => {
+            const username = usernameInput.value;
+            const message = document.getElementById('message').value;
+            if (username && message) {
+                const data = { sender: username, message };
+                socket.emit('chatMessage', data); // Emit message to the server
+                const selfMessage = document.createElement('p');
+                selfMessage.textContent = `You: ${message}`;
+                chatBox.appendChild(selfMessage);
+                chatBox.scrollTop = chatBox.scrollHeight;
+                document.getElementById('message').value = ''; // Clear input
+            }
         });
     </script>
 </body>

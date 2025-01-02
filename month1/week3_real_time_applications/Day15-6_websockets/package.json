@@ -5,7 +5,7 @@
   "author": "mohd sameer <mohdsameer68257@gmail.com>",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/chatMessage.js"
   },
   "license": "MIT",
   "dependencies": {

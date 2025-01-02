@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO</title>
+</head>
+
+<body>
+    <h1>Socket.IO Test</h1>
+    <div>
+        <p><strong>Server Message:</strong> <span id="serverMessage">Waiting for message...</span></p>
+        <p><strong>Server Response:</strong> <span id="serverResponse">No response yet...</span></p>
+    </div>
+    <button id="sendMessage">Send Message to Server</button>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io("http://localhost:3000");
+
+        // Handle server messages
+        socket.on('serverMessage', (data) => {
+            document.getElementById('serverMessage').textContent = data.message;
+        })
+
+        // Handle server responses
+        socket.on('serverResponse', (data) => {
+            document.getElementById('serverResponse').textContent = data.message;
+        });
+
+        // Send a message to the server when the button is clicked
+        document.getElementById('sendMessage').addEventListener('click', () => {
+            socket.emit('clientMessage', { content: 'Hello, server!' });
+        });
+
+        // Log connection status
+        socket.on('connect', () => {
+            console.log('Connected to server:', socket.id);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
+    </script>
+</body>
+
+</html>
