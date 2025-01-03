@@ -1,0 +1,8 @@
+{
+  "name": "event-emitter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "mohd sameer <mohdsameer68257@gmail.com>",
+  "license": "MIT",
+  "type": "module"
+}
